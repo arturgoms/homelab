@@ -1,0 +1,21 @@
+services:
+  mariadb:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: mariadb
+    env_file:
+      - .env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /srv/mariadb/config:/config
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true

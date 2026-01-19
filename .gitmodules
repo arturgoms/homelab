@@ -1,0 +1,6 @@
+[submodule "arturgomes.com/vue3-docker"]
+	path = arturgomes.com/vue3-docker
+	url = https://github.com/khadka7/vue3-docker.git
+[submodule "garmin-fetch-data/garmin-grafana"]
+	path = garmin-fetch-data/garmin-grafana
+	url = https://github.com/arpanghosh8453/garmin-grafana

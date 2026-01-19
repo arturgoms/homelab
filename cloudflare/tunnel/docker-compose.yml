@@ -1,0 +1,29 @@
+version: '3.9'
+
+# service description
+services:
+
+  # cloudflare tunnel
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cf-tunnel2
+    hostname: cf-tunnel2
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - exposed
+    command: tunnel --protocol http2 run
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/:/home/nonroot/.cloudflared/
+    environment:
+      - "TUNNEL_TOKEN=${TUNNEL_TOKEN}"
+    labels:
+      # enbale watchtower updates
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  exposed:
+    external: true
+

@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8888:8080"  # Expose on port 8888
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=https://searxng.arturgomes.com/
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - UID=1000
+      - GID=1000
+
+    networks:
+      exposed:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.searxng.entrypoints=http"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.arturgomes.com`)"
+      - "traefik.http.middlewares.searxng-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.searxng.middlewares=searxng-https-redirect"
+      - "traefik.http.routers.searxng-secure.entrypoints=https"
+      - "traefik.http.routers.searxng-secure.rule=Host(`searxng.arturgomes.com`)"
+      - "traefik.http.routers.searxng-secure.tls=true"
+      - "traefik.http.routers.searxng-secure.service=searxng"
+      - "traefik.http.services.searxng.loadbalancer.server.port=8080"
+      - "traefik.docker.network=exposed"
+  redis:
+    image: redis:alpine
+    container_name: searxng-redis
+    restart: unless-stopped
+    command: redis-server --save 30 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true
+
+volumes:
+  redis-data:
+    driver: local

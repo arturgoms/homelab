@@ -1,0 +1,107 @@
+version: "3.8"
+
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    command: [ "start.sh", "immich" ]
+    volumes:
+      - /mnt/friday-pool/photos/:/usr/src/app/upload
+    env_file:
+      - .env
+    ports:
+      - 3001:3001
+    depends_on:
+      - redis
+      - database
+      - typesense
+    restart: always
+    networks:
+      - exposed
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.immich.entrypoints=http"
+      - "traefik.http.routers.immich.rule=Host(`immich.arturgomes.com`)"
+      - "traefik.http.middlewares.immich-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.immich.middlewares=immich-https-redirect"
+      - "traefik.http.routers.immich-secure.entrypoints=https"
+      - "traefik.http.routers.immich-secure.rule=Host(`immich.arturgomes.com`)"
+      - "traefik.http.routers.immich-secure.tls=true"
+      - "traefik.http.routers.immich-secure.service=immich"
+      - "traefik.http.services.immich.loadbalancer.server.port=3001"
+      - "traefik.docker.network=exposed"
+      - "traefik.http.middlewares.service-immich-api-strip.stripprefix.prefixes=/api"
+
+  immich-microservices:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    extends:
+      file: hwaccel.yml
+      service: nvenc
+    command: [ "start.sh", "microservices" ]
+    networks:
+      - exposed
+    volumes:
+      - /mnt/friday-pool/photos/:/usr/src/app/upload
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - database
+      - typesense
+    restart: always
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
+    extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+      file: hwaccel.yml
+      service: cuda # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    volumes:
+      - /srv/immich/model-cache:/cache
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - exposed
+
+  typesense:
+    container_name: immich_typesense
+    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
+    environment:
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_DATA_DIR=/data
+      # remove this to get debug messages
+      - GLOG_minloglevel=1
+    volumes:
+      - /srv/immich/tsdata:/data
+    restart: always
+    networks:
+      - exposed
+
+  redis:
+    container_name: immich_redis
+    image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
+    restart: always
+    networks:
+      - exposed
+
+  database:
+    container_name: immich_postgres
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+    volumes:
+      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - exposed
+
+## there is a known issue with Traefik: see here https://github.com/immich-app/immich/discussions/437#discussioncomment-3609797
+networks:
+  exposed:
+    external: true

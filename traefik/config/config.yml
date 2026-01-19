@@ -1,0 +1,167 @@
+tcp:
+  routers:
+    gitea:
+      entryPoints:
+        - ssh
+      rule: "HostSNI(`*`)"
+      service: gitea-ssh
+
+  services:
+    gitea-ssh:
+      loadBalancer:
+        servers:
+          - address: 192.168.1.16:2222
+
+http:
+ #region routers 
+  routers:
+    proxmox:
+      rule: "Host(`pve1.arturgomes.com`)"
+      entryPoints:
+        - "https"
+      service: proxmox
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+    homeassistant:
+      # For Homeassistant config, check: https://www.home-assistant.io/integrations/http/#reverse-proxies
+      # This relies on Homeassistant using http. No certs are needed in the Homeassistant config.
+      entryPoints:
+        - "https"
+      rule: "Host(`home-assistant.arturgomes.com`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: homeassistant
+    truenas:
+      entryPoints:
+        - "https"
+      rule: "Host(`truenas.arturgomes.com`)"
+      middlewares:
+        - default-headers
+      service: truenas
+      tls: {}
+    pihole:
+      entryPoints:
+        - "https"
+      rule: "Host(`pihole.arturgomes.com`)"
+      middlewares:
+        - default-headers
+      service: pihole
+      tls: {}
+    n8n:
+      entryPoints:
+        - "https"
+      rule: "Host(`n8n.arturgomes.com`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      service: n8n
+      tls: {}
+    main:
+      entryPoints:
+        - "https"
+      rule: "Host(`arturgomes.com`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      service: main
+      tls: {}
+    openui:
+      entryPoints:
+        - "https"
+      rule: "Host(`chat.arturgomes.com`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      service: openui
+      tls: {}
+  services:
+    proxmox:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.1.15:8006"
+        passHostHeader: true
+    truenas:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.1.17"
+        passHostHeader: true
+    homeassistant:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.16:8123"
+        passHostHeader: true
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.13:8080"
+        passHostHeader: true
+    n8n:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.16:5678"
+    main:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.16:8090"
+    openui:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.16:8091"
+#endregion
+  middlewares:
+    crowdsec-bouncer:
+      forwardauth:
+        address: http://bouncer-traefik:8080/api/v1/forwardAuth
+        trustForwardHeader: true
+    addprefix-pihole:
+      addPrefix:
+        prefix: "/admin"
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    redirectregex-pihole:
+      redirectRegex:
+        regex: /admin/$
+        replacement: /
+
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    idrac:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    default-whitelist:
+      ipWhiteList:
+        sourceRange:
+        - "10.0.0.0/8"
+        - "192.168.0.0/16"
+        - "172.16.0.0/12"
+
+    secured:
+      chain:
+        middlewares:
+        - default-whitelist
+        - default-headers

@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    environment:
+      GID: "${GID-1000}"
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
+    # depends_on:  #uncomment if running traefik in the same compose file
+    #   - 'traefik'
+    ports:
+      - 6060:6060
+    volumes:
+      - ./config/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - crowdsec-db:/var/lib/crowdsec/data/
+      - crowdsec-config:/etc/crowdsec/
+      - /srv/traefik/logs:/var/log/traefik/:ro
+    networks:
+      - exposed
+    restart: unless-stopped
+
+  bouncer-traefik:
+    image: docker.io/fbonalair/traefik-crowdsec-bouncer:latest
+    container_name: bouncer-traefik
+    env_file:
+      - .env
+    environment:
+      CROWDSEC_AGENT_HOST: crowdsec:8080
+    networks:
+      - exposed # same network as traefik + crowdsec
+    depends_on:
+      - crowdsec
+    restart: unless-stopped
+  dashboard:
+    #we're using a custom Dockerfile so that metabase pops with pre-configured dashboards
+    image: apollof/crowdsec_metabase:latest
+    container_name: dashboard
+    restart: unless-stopped
+    ports:
+      - 4000:3000
+    env_file:
+      - .env
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_CONNECTION_URI: "jdbc:postgresql://database:5432/metabase?user=${MB_DB_USER}&password=${MB_DB_PASSWORD}"
+      MGID: "${GID-1000}"
+    depends_on:
+      - 'crowdsec'
+    volumes:
+      - crowdsec-db:/metabase-data/
+    networks:
+      exposed:
+networks:
+  exposed:
+    external: true
+volumes:
+  crowdsec-db:
+  crowdsec-config:

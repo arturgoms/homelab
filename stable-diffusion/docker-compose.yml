@@ -1,0 +1,18 @@
+services:
+  diffusers-api:
+    image: gadicc/diffusers-api
+    container_name: diffusers-api
+    restart: unless-stopped  # Ensures persistence across reboots
+    env_file:
+      - .env
+    ports:
+      - "8002:8000"          # Maps host 8002 to container 8000
+    environment:
+      - HF_AUTH_TOKEN=${HF_AUTH_TOKEN}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

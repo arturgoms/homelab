@@ -1,0 +1,73 @@
+volumes:
+  n8n_storage:
+  redis_storage:
+
+x-shared: &shared
+  restart: always
+  environment:
+    - DB_TYPE=postgresdb
+    - DB_POSTGRESDB_HOST=database
+    - DB_POSTGRESDB_PORT=5432
+    - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+    - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+    - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    - N8N_BASIC_AUTH_ACTIVE=true
+    - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+    - N8N_HOST=${N8N_HOST}
+    - N8N_PROTOCOL=${N8N_PROTOCOL}
+    - N8N_RUNNERS_ENABLED=${N8N_RUNNERS_ENABLED}
+    - NODE_ENV=${NODE_ENV}
+    - WEBHOOK_URL=${N8N_PROTOCOL}://${N8N_HOST}/
+    - WEBHOOK_TUNNEL_URL=${N8N_PROTOCOL}://${N8N_HOST}/
+    - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+    - EXECUTIONS_MODE=queue
+    - QUEUE_BULL_REDIS_HOST=redis
+    - QUEUE_HEALTH_CHECK_ACTIVE=true
+  volumes:
+    - n8n_storage:/home/node/.n8n
+  networks:
+    - exposed
+  depends_on:
+    redis:
+      condition: service_healthy
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis_storage:/data
+    networks:
+      - exposed
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    <<: *shared
+    image: docker.n8n.io/n8nio/n8n
+    command: start
+    ports:
+      - "5678:5678"
+
+  n8n-worker-1:
+    <<: *shared
+    image: n8nio/n8n
+    command: worker
+    depends_on:
+      - n8n
+      - redis
+
+  n8n-worker-2:
+    <<: *shared
+    image: n8nio/n8n
+    command: worker
+    depends_on:
+      - n8n
+      - redis
+
+networks:
+  exposed:
+    external: true

@@ -1,0 +1,81 @@
+# Environment files with secrets
+**/.env
+**/*.env
+
+# Traefik secrets
+traefik/cloudflare.env
+traefik/cf_api_token.txt
+**/acme.json
+traefik/users
+
+# SSL certificates and keys
+**/*.pem
+**/*.key
+**/cert.crt
+**/cert.key
+
+# Home Assistant secrets
+home-assistant/config/secrets.yaml
+home-assistant/config/.storage/*
+
+# Data directories
+**/data/
+**/db-data/
+**/pgadmin-data/
+**/pgdata/
+
+# Logs
+**/logs/
+**/*.log
+
+# Database files
+mariadb/config/databases/
+mariadb/config/log/
+**/core
+**/core.*
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.db.mv.db
+
+# Binary logs
+**/*.log.*
+**/wget-log
+
+# Grafana data
+monitoring/grafana/plugins/
+monitoring/grafana/*.db
+
+# InfluxDB data
+monitoring/influxdb/
+monitoring/graphite/
+
+# ML model caches
+**/model-cache/
+**/tsdata/
+
+# Syncthing data
+syncthing/docs/
+
+# Nextcloud app data
+nextcloud/data/
+
+# IDE and system
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# Python
+**/__pycache__/
+**/venv/
+**/*.pyc
+
+# Node
+**/node_modules/
+
+# Garmin Exports
+garmin-fetch-data/export/*
+# Docker volumes (named volumes stored elsewhere)
+# Local data that shouldn't be in git

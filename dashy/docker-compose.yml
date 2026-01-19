@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  dashy:
+    container_name: dashy
+
+    # Pull latest image from DockerHub
+    image: lissy93/dashy:latest
+
+    # Pass in your config file below, by specifying the path on your host machine
+    volumes:
+      - /srv/dashy/conf.yml:/app/user-data/conf.yml
+      # - /path/to/item-icons:/app/public/item-icons
+
+
+    # Set any environmental variables
+    environment:
+      - NODE_ENV=production
+    # Specify your user ID and group ID. You can find this by running `id -u` and `id -g`
+      - UID=1000
+      - GID=1000
+
+    networks:
+      exposed:
+    # Specify restart policy
+    restart: unless-stopped
+
+    # Configure healthchecks
+    healthcheck:
+      test: ['CMD', 'node', '/app/services/healthcheck']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashy.entrypoints=http"
+      - "traefik.http.routers.dashy.rule=Host(`dashy.arturgomes.com`)"
+      - "traefik.http.middlewares.dashy-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.dashy.middlewares=dashy-https-redirect"
+      - "traefik.http.routers.dashy-secure.entrypoints=https"
+      - "traefik.http.routers.dashy-secure.rule=Host(`dashy.arturgomes.com`)"
+      - "traefik.http.routers.dashy-secure.tls=true"
+      - "traefik.http.routers.dashy-secure.service=dashy"
+      - "traefik.http.services.dashy.loadbalancer.server.port=8080"
+      - "traefik.docker.network=exposed"
+networks:
+  exposed:
+    external: true

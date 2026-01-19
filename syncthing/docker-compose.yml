@@ -1,0 +1,37 @@
+version: "3"
+services:
+  syncthing:
+    image: syncthing/syncthing
+    container_name: syncthing
+    hostname: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /srv/syncthing/docs:/var/syncthing
+      - /srv/traefik/users:/users:ro
+    ports:
+      - 8384:8384 # Web UI
+      - 22000:22000/tcp # TCP file transfers
+      - 22000:22000/udp # QUIC file transfers
+      - 21027:21027/udp # Receive local discovery broadcasts
+    restart: unless-stopped
+    networks:
+      - exposed
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sync.entrypoints=http"
+      - "traefik.http.routers.sync.rule=Host(`sync.arturgomes.com`)"
+      - "traefik.http.middlewares.sync-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.sync.middlewares=sync-https-redirect"
+      - "traefik.http.routers.sync-secure.entrypoints=https"
+      - "traefik.http.routers.sync-secure.rule=Host(`sync.arturgomes.com`)"
+      - "traefik.http.routers.sync-secure.tls=true"
+      - "traefik.http.routers.sync-secure.service=sync"
+      - "traefik.http.services.sync.loadbalancer.server.port=8384"
+      - "traefik.docker.network=exposed"
+      - "traefik.http.middlewares.traefik-auth.basicauth.usersfile=/users"
+
+networks:
+  exposed:
+    external: true

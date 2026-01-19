@@ -1,0 +1,237 @@
+pageInfo:
+  title: Artur's Homelab
+  description: Homelab shortcuts
+  navLinks:
+    - title: GitHub
+      path: https://github.com/arturgoms/dashy
+      target: newtab
+  footerText: 'Artur''s Homelab @ 2024 '
+appConfig:
+  theme: dashy-docs
+  layout: auto
+  iconSize: medium
+  startingView: default
+  defaultOpeningMethod: newtab
+  statusCheck: true
+  statusCheckInterval: 0
+  faviconApi: allesedv
+  routingMode: history
+  enableMultiTasking: false
+  widgetsAlwaysUseProxy: false
+  webSearch:
+    disableWebSearch: false
+    searchEngine: duckduckgo
+    openingMethod: newtab
+    searchBangs: {}
+  enableFontAwesome: true
+  enableMaterialDesignIcons: false
+  hideComponents:
+    hideHeading: false
+    hideNav: false
+    hideSearch: false
+    hideSettings: false
+    hideFooter: false
+  auth:
+    users:
+      - user: artur
+        hash: E92FE947708629F5DA3CEA9C6A4AE8596BA03A16855DB35C19EBF7B7AFA12A99
+        type: admin
+    enableGuestAccess: false
+    enableOidc: false
+    oidc: {}
+    enableHeaderAuth: false
+    headerAuth:
+      userHeader: REMOTE_USER
+      proxyWhitelist: []
+    enableKeycloak: false
+  showSplashScreen: false
+  preventWriteToDisk: false
+  preventLocalSave: false
+  disableConfiguration: false
+  disableConfigurationForNonAdmin: false
+  allowConfigEdit: true
+  enableServiceWorker: false
+  disableContextMenu: false
+  disableUpdateChecks: false
+  disableSmartSort: false
+  enableErrorReporting: false
+sections:
+  - name: Getting Started
+    icon: fas fa-rocket
+    items:
+      - title: Dashy Live
+        description: Development a project management links for Dashy
+        icon: https://i.ibb.co/qWWpD0v/astro-dab-128.png
+        url: https://live.dashy.to/
+        target: newtab
+        id: 0_1481_dashylive
+      - title: GitHub
+        description: Source Code, Issues and Pull Requests
+        url: https://github.com/lissy93/dashy
+        icon: favicon
+        id: 1_1481_github
+      - title: Docs
+        description: Configuring & Usage Documentation
+        provider: Dashy.to
+        icon: far fa-book
+        url: https://dashy.to/docs
+        id: 2_1481_docs
+      - title: Showcase
+        description: See how others are using Dashy
+        url: https://github.com/Lissy93/dashy/blob/master/docs/showcase.md
+        icon: far fa-grin-hearts
+        id: 3_1481_showcase
+      - title: Config Guide
+        description: See full list of configuration options
+        url: https://github.com/Lissy93/dashy/blob/master/docs/configuring.md
+        icon: fas fa-wrench
+        id: 4_1481_configguide
+      - title: Support
+        description: Get help with Dashy, raise a bug, or get in contact
+        url: https://github.com/Lissy93/dashy/blob/master/.github/SUPPORT.md
+        icon: far fa-hands-helping
+        id: 5_1481_support
+  - name: Media
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Immich
+        description: Photos and Videos
+        icon: https://immich.arturgomes.com/manifest-icon-192.maskable.png
+        url: https://immich.arturgomes.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_480_immich
+      - title: Nextcloud
+        description: Documents
+        icon: https://nextcloud.arturgomes.com/core/img/logo/logo.svg
+        url: https://nextcloud.arturgomes.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1_480_nextcloud
+      - title: TrueNAS
+        description: My home NAS
+        icon: >-
+          https://truenas.arturgomes.com/ui/assets/customicons/truenas_scale_logomark_rgb.svg
+        url: https://truenas.arturgomes.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_480_truenas
+      - title: Jellyfin
+        description: Watch movies
+        icon: https://jellyfin.arturgomes.com/web/touchicon144.png
+        url: https://jellyfin.arturgomes.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_480_jellyfin
+  - name: Monitoring
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Uptime Kuma
+        description: Uptime my systems
+        icon: https://uptime.arturgomes.com/icon.svg
+        url: https://uptime.arturgomes.com
+        target: newtab
+        statusCheck: true
+        id: 0_1062_uptimekuma
+      - title: Traefik
+        description: Reverse proxy
+        icon: https://traefik.arturgomes.com/dashboard/statics/icons/favicon.ico
+        url: https://traefik.arturgomes.com
+        target: newtab
+        statusCheck: false
+        statusCheckAllowInsecure: true
+        id: 1_1062_traefik
+      - title: Syncthing
+        description: Sync my stuff
+        icon: https://sync.arturgomes.com/assets/img/favicon-default.png
+        url: https://sync.arturgomes.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_1062_syncthing
+      - title: Homeassitant
+        description: My home devices
+        icon: https://home-assistant.arturgomes.com/static/icons/favicon-192x192.png
+        url: https://home-assistant.arturgomes.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_1062_homeassitant
+  - name: Tools
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Git
+        description: Git server
+        icon: ' https://git.arturgomes.com/assets/img/favicon.png'
+        url: ' https://git.arturgomes.com/'
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_529_git
+      - title: Proxmox
+        description: Proxmox cluster
+        icon: https://pve1.arturgomes.com/pve2/images/proxmox_logo.png
+        url: https://pve1.arturgomes.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1_529_proxmox
+      - title: Unifi
+        description: Unifi router dashboard
+        icon: https://unifi.ui.com/favicon.svg?v3
+        url: https://unifi.ui.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_529_unifi
+      - title: PiHole
+        description: DNS
+        icon: https://pihole.arturgomes.com/admin/img/logo.svg
+        url: https://pihole.arturgomes.com/admin
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_529_pihole
+      - title: Portainer
+        description: My cluster of docker
+        icon: https://portainer.arturgomes.com/2dcfc527d067d4ae3424.png
+        url: https://portainer.arturgomes.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4_529_portainer
+      - title: Torrent
+        description: Torrent Download
+        icon: >-
+          https://e1.pngegg.com/pngimages/1012/597/png-clipart-qbittorrent-icon-qbittorrent-1.png
+        url: http://192.168.1.16:8080/
+        target: newtab
+        statusCheck: true
+        id: 5_529_torrent
+      - title: Wallos
+        description: Subscription Tracker
+        icon: ' https://wallo.arturgomes.com/images/siteicons/blue/walloswhite.png'
+        url: https://wallo.arturgomes.com
+        target: newtab
+        statusCheckAllowInsecure: true
+        statusCheck: true
+        id: 6_529_wallos

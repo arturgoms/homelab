@@ -1,0 +1,5 @@
+tunnel: 0c84396e-f657-4302-a3a2-006be81427c8
+credentials-file: /home/nonroot/.cloudflared/0c84396e-f657-4302-a3a2-006be81427c8.json
+ingress:
+  - service: https://traefik
+    noTLSVerify: true

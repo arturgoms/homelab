@@ -1,0 +1,81 @@
+# SearXNG Configuration
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Friday AI Search"
+  privacypolicy_url: ""
+  contact_url: ""
+  enable_metrics: false
+
+brand:
+  new_issue_url: ""
+  docs_url: ""
+  public_instances: ""
+  wiki_url: ""
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "en"
+  ban_time_on_fail: 5
+  max_ban_time_on_fail: 120
+  formats:
+    - html
+    - json
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "n8YViWDHHBRDxNa3qfeRPeNT778hNhUKGBcLVTA"
+  limiter: false
+  image_proxy: true
+
+ui:
+  static_use_hash: true
+  default_locale: "en"
+  query_in_title: false
+  infinite_scroll: false
+  center_alignment: false
+  default_theme: simple
+  theme_args:
+    simple_style: auto
+
+# Redis for caching
+redis:
+  url: redis://searxng-redis:6379/0
+
+# Enable search engines
+engines:
+  - name: google
+    engine: google
+    shortcut: go
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+
+  - name: brave
+    engine: brave
+    shortcut: br
+
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+
+  - name: reddit
+    engine: reddit
+    shortcut: re
+
+  - name: github
+    engine: github
+    shortcut: gh
+
+  - name: stackoverflow
+    engine: stackoverflow
+    shortcut: st
+

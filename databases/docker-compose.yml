@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  database:
+    image: 'postgres:latest'
+    container_name: database
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    networks:
+      - exposed
+    volumes:
+      - ${PWD}/db-data/:/var/lib/postgresql/data/
+      - ${PWD}/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    ports:
+      - 15433:80
+    user: '5050:5050'
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - exposed
+    volumes:
+      - ${PWD}/pgadmin-data/:/var/lib/pgadmin/
+
+  influxdb1x:
+    image: influxdb:1.11
+    container_name: influxdb1x
+    restart: unless-stopped
+    ports:
+      - '8088:8086'
+    environment:
+      - INFLUXDB_DB=GarminStats
+      - INFLUXDB_USER=${INFLUXDB_USER}
+      - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
+      - INFLUXDB_DATA_INDEX_VERSION=tsi1
+    volumes:
+      - influxdb1x_data:/var/lib/influxdb
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true
+
+volumes:
+  influxdb1x_data:
+    external: true
+    name: garmin-fetch-data_influxdb_data
