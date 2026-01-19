@@ -1,0 +1,78 @@
+baseURL = 'https://arturgomes.com/'
+languageCode = 'en-us'
+title = 'Artur Gomes'
+theme = 'risotto'
+author = "Artur Gomes"
+copyright = "Artur Gomes"
+
+# Automatically add content sections to main menu
+sectionPagesMenu = "main"
+
+[pagination]
+pagerSize = 10
+
+[params]
+description = "Backend Developer | Python Expert | Self-hosting Enthusiast"
+noindex = false
+
+[params.theme]
+palette = "base16-dark"
+
+# Sidebar: about/bio
+[params.about]
+title = "Artur Gomes"
+description = "Backend Developer with 10+ years of Python experience. Building robust APIs and exploring self-hosted infrastructure."
+logo_image = "images/profile.jpg"
+
+# Sidebar: social links
+[[params.socialLinks]]
+icon = "fa-brands fa-github"
+title = "GitHub"
+url = "https://github.com/arturgoms"
+
+[[params.socialLinks]]
+icon = "fa-brands fa-linkedin"
+title = "LinkedIn"
+url = "https://www.linkedin.com/in/artur-gomes-a3aa059b/"
+
+[[params.socialLinks]]
+icon = "fa-solid fa-envelope"
+title = "Email"
+url = "mailto:contato@arturgomes.com.br"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 2
+  [[menu.main]]
+    identifier = "projects"
+    name = "Projects"
+    url = "/projects/"
+    weight = 3
+  [[menu.main]]
+    identifier = "posts"
+    name = "Blog"
+    url = "/posts/"
+    weight = 4
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+
+[markup]
+  [markup.highlight]
+    style = "monokai"
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = true
