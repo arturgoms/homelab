@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - exposed
+    labels:
+      - "traefik.enable=true"
+      # HTTP redirect to HTTPS
+      - "traefik.http.routers.umami.entrypoints=http"
+      - "traefik.http.routers.umami.rule=Host(`umami.arturgomes.com`)"
+      - "traefik.http.middlewares.umami-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.umami.middlewares=umami-https-redirect"
+      # HTTPS
+      - "traefik.http.routers.umami-secure.entrypoints=https"
+      - "traefik.http.routers.umami-secure.rule=Host(`umami.arturgomes.com`)"
+      - "traefik.http.routers.umami-secure.tls=true"
+      - "traefik.http.routers.umami-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.umami-secure.service=umami"
+      # Service
+      - "traefik.http.services.umami.loadbalancer.server.port=3000"
+      - "traefik.docker.network=exposed"
+
+networks:
+  exposed:
+    external: true

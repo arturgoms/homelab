@@ -18,6 +18,12 @@ noindex = false
 [params.theme]
 palette = "base16-dark"
 
+# Umami Analytics
+[params.umami]
+enabled = true
+url = "https://umami.arturgomes.com"
+websiteId = "a3091953-49c7-454d-83d4-41e661df23cb"
+
 # Sidebar: about/bio
 [params.about]
 title = "Artur Gomes"
