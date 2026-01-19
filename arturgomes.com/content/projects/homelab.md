@@ -1,8 +1,13 @@
 ---
 title: "Homelab"
-date: 2024-01-01
 description: "Self-hosted infrastructure running on Docker with Traefik and Cloudflare Tunnel"
-tags: ["docker", "self-hosting", "infrastructure", "traefik", "homelab"]
+date: 2024-01-01
+tags:
+  - docker
+  - self-hosting
+  - infrastructure
+  - traefik
+  - homelab
 ---
 
 My self-hosted infrastructure running 20+ services on Docker with Traefik as reverse proxy and Cloudflare Tunnel for secure external access.
@@ -49,6 +54,11 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 - **Traefik** - Reverse proxy & SSL termination
 - **Cloudflare** - DNS, CDN & Tunnel
 - **Let's Encrypt** - SSL certificates
+
+## Related
+
+- [[projects/friday|Friday]] - AI assistant running on this infrastructure
+- [[posts/how-to-manage-passwords|Password Management]] - Using KeePass synced via Nextcloud
 
 ## Links
 

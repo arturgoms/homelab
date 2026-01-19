@@ -1,5 +1,6 @@
 ---
-title: "About"
+title: About
+description: "Backend Developer with 10+ years of Python experience"
 ---
 
 # About Me
@@ -34,14 +35,14 @@ Currently, I work full-time with **Django** and **Django REST Framework**, desig
 
 When I'm not writing code for work, I enjoy:
 
-- **Building [Friday](/projects/friday/)** - My personal AI assistant running entirely on local hardware, with 79 tools, Telegram integration, and proactive awareness features
-- **Self-hosting** - Running my own services on a homelab
+- **Building [[projects/friday|Friday]]** - My personal AI assistant running entirely on local hardware, with 79 tools, Telegram integration, and proactive awareness features
+- **Self-hosting** - Running my own services on a [[projects/homelab|homelab]]
 - **Automation** - Making repetitive tasks disappear
 - **Learning** - Exploring new technologies and approaches
 
 ## This Website
 
-This site is built with [Hugo](https://gohugo.io/) using the [Risotto](https://github.com/joeroe/risotto) theme, self-hosted on my homelab behind [Traefik](https://traefik.io/) and [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/).
+This site is built with [Quartz](https://quartz.jzhao.xyz/), a digital garden framework that enables features like the graph view, backlinks, and wikilinks. It's self-hosted on my homelab behind [Traefik](https://traefik.io/) and [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/).
 
 ## Contact
 

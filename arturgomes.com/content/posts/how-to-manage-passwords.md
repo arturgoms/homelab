@@ -1,15 +1,15 @@
 ---
 title: "How to Manage Passwords"
+description: "My approach to password management - tools, synchronization, organization, and security practices"
 date: 2026-01-19
-draft: false
-tags: ["security", "passwords", "keepass", "self-hosted"]
-categories: ["Security"]
-toc: true
+tags:
+  - security
+  - passwords
+  - keepass
+  - self-hosted
 ---
 
 This is my approach to password management - the tools I use, synchronization setup, folder organization, review routines, and security practices. A practical guide to managing passwords efficiently while maintaining a high level of security.
-
-<!--more-->
 
 ## Tools and Clients
 
@@ -37,7 +37,7 @@ I experimented with other sync methods:
 - **Git** - Works well but overkill for a single file
 - **iCloud** - Convenient but less control over my data
 
-Nextcloud proved to be the most practical solution, providing a balance between accessibility, security, and control over my data. Plus, it's self-hosted on my homelab.
+Nextcloud proved to be the most practical solution, providing a balance between accessibility, security, and control over my data. Plus, it's self-hosted on my [[projects/homelab|homelab]].
 
 ## Folder Organization
 

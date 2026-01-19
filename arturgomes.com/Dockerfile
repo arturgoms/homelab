@@ -1,15 +1,16 @@
 # Build stage
-FROM hugomods/hugo:latest AS builder
+FROM node:22-slim AS builder
 
-WORKDIR /src
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
 COPY . .
-
-RUN hugo --minify
+RUN npx quartz build
 
 # Production stage
 FROM nginx:alpine
 
-COPY --from=builder /src/public /usr/share/nginx/html
+COPY --from=builder /app/public /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

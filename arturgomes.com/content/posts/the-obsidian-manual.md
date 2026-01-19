@@ -1,15 +1,15 @@
 ---
 title: "The Obsidian Manual: How I Organize My Notes"
+description: "My complete operating manual for organizing thoughts, projects, and knowledge with Obsidian"
 date: 2026-01-19
-draft: false
-tags: ["productivity", "obsidian", "note-taking", "knowledge-management"]
-categories: ["Productivity"]
-toc: true
+tags:
+  - productivity
+  - obsidian
+  - note-taking
+  - knowledge-management
 ---
 
 After trying every note-taking methodology out there, I developed my own system in Obsidian. This is my complete operating manual for organizing thoughts, projects, and knowledge with clarity and consistency.
-
-<!--more-->
 
 ## Core Philosophy
 

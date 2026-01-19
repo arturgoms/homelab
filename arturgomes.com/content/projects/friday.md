@@ -1,17 +1,20 @@
 ---
 title: "Friday - Personal AI Assistant"
+description: "A sophisticated personal AI assistant designed to operate entirely on local hardware"
 date: 2026-01-19
-draft: false
-tags: ["python", "ai", "llm", "self-hosted", "telegram"]
+tags:
+  - python
+  - ai
+  - llm
+  - self-hosted
+  - telegram
 ---
 
 A sophisticated personal AI assistant designed to operate entirely on local hardware. No cloud dependencies - your data stays yours.
 
-<!--more-->
-
 ## Overview
 
-Friday is my personal AI assistant that runs on my homelab. It leverages the Hermes-4-14B model via vLLM and provides proactive awareness capabilities through multi-channel communication and extensive tool integration.
+Friday is my personal AI assistant that runs on my [[projects/homelab|homelab]]. It leverages the Hermes-4-14B model via vLLM and provides proactive awareness capabilities through multi-channel communication and extensive tool integration.
 
 **Repository:** [github.com/arturgoms/friday](https://github.com/arturgoms/friday)
 
@@ -40,7 +43,7 @@ Friday is my personal AI assistant that runs on my homelab. It leverages the Her
 - Daily journal threads with voice transcription (Whisper)
 - Scheduled reports (briefings, journal notes)
 - Markdown formatting for Telegram compatibility
-- Obsidian vault integration
+- [[posts/the-obsidian-manual|Obsidian]] vault integration
 
 ## Tech Stack
 

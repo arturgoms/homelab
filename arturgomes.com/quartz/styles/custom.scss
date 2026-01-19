@@ -1,0 +1,19 @@
+@use "./base.scss";
+@use "./variables.scss" as *;
+
+// put your custom CSS here!
+
+// Fix mobile hamburger menu staying on screen
+@media all and ($mobile) {
+  .explorer.collapsed .mobile-explorer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .explorer:not(.collapsed) .mobile-explorer {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 101;
+  }
+}
