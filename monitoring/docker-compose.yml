@@ -25,7 +25,7 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yml
   grafana:
     container_name: grafana
-    image: grafana/grafana-oss:main-ubuntu
+    image: grafana/grafana-oss:latest
     user: "0"
     networks:
       - grafana-monitoring
@@ -38,6 +38,7 @@ services:
       - "8087:3000"
     environment:
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_SECURITY_ANGULAR_SUPPORT_ENABLED=true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.entrypoints=http"

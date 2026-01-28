@@ -14,3 +14,22 @@ scrape_configs:
   - job_name: crowdsec_machine
     static_configs:
       - targets: ["192.168.1.16:6060"] # change this to your crowdsec IP. Be sure to enable port 6060 first
+  - job_name: 'nut'
+    static_configs:
+      - targets: ['192.168.1.208:9199']
+    metrics_path: /ups_metrics
+    scrape_interval: 15s
+  - job_name: immich_api
+    sample_limit: 10000
+    static_configs:
+      - targets: ['192.168.1.16:8081']
+
+  - job_name: immich_microservices
+    sample_limit: 10000
+    static_configs:
+      - targets: ['192.168.1.16:8082']
+
+  - job_name: booklore
+    static_configs:
+      - targets: ['192.168.1.16:9092']
+

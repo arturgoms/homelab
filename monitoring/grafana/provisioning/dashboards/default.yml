@@ -33,3 +33,36 @@ providers:
     updateIntervalSeconds: 60
     options:
       path: /var/lib/grafana/dashboards/general
+
+  - name: 'Infrastructure'
+    orgId: 1
+    folder: 'Infrastructure'
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 60
+    options:
+      path: /var/lib/grafana/dashboards/infrastructure
+
+  - name: 'Immich'
+    orgId: 1
+    folder: 'Immich'
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 60
+    options:
+      path: /var/lib/grafana/dashboards/immich
+
+  - name: 'BookLore'
+    orgId: 1
+    folder: 'BookLore'
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 60
+    options:
+      path: /var/lib/grafana/dashboards/booklore

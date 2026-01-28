@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: BookLore-MariaDB
+    type: mysql
+    uid: booklore-mariadb
+    access: proxy
+    url: mariadb:3306
+    database: booklore
+    user: booklore
+    secureJsonData:
+      password: ibwAVgHQwJLGNXoU
+    editable: true

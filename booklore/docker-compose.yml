@@ -1,0 +1,74 @@
+services:
+  booklore:
+    image: ghcr.io/booklore-app/booklore:latest
+    container_name: booklore
+    env_file:
+      - .env
+    environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
+      - TZ=America/Sao_Paulo
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - BOOKLORE_PORT=${BOOKLORE_PORT}
+    volumes:
+      - /srv/booklore/data:/app/data
+      - /mnt/friday-pool/all/media/books:/books
+      - /srv/booklore/bookdrop:/bookdrop
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.booklore.entrypoints=http"
+      - "traefik.http.routers.booklore.rule=Host(`books.arturgomes.com`)"
+      - "traefik.http.middlewares.booklore-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.booklore.middlewares=booklore-https-redirect"
+      - "traefik.http.routers.booklore-secure.entrypoints=https"
+      - "traefik.http.routers.booklore-secure.rule=Host(`books.arturgomes.com`)"
+      - "traefik.http.routers.booklore-secure.tls=true"
+      - "traefik.http.routers.booklore-secure.middlewares=default-headers@file"
+      - "traefik.http.routers.booklore-secure.service=booklore"
+      - "traefik.http.services.booklore.loadbalancer.server.port=6060"
+      - "traefik.docker.network=exposed"
+    networks:
+      - exposed
+
+  booklore-metrics:
+    build: ./metrics-exporter
+    container_name: booklore-metrics
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=booklore
+      - DB_USER=booklore
+      - DB_PASSWORD=${DATABASE_PASSWORD}
+      - EXPORTER_PORT=9090
+      - SCRAPE_INTERVAL=60
+    ports:
+      - "9092:9090"
+    restart: unless-stopped
+    networks:
+      - exposed
+
+  antholume-sync:
+    build: ./sync-bridge
+    container_name: antholume-sync
+    environment:
+      - ANTHOLUME_DB=/antholume/antholume.db
+      - BOOKLORE_DB_HOST=mariadb
+      - BOOKLORE_DB_PORT=3306
+      - BOOKLORE_DB_NAME=booklore
+      - BOOKLORE_DB_USER=booklore
+      - BOOKLORE_DB_PASSWORD=${DATABASE_PASSWORD}
+      - SYNC_INTERVAL=300
+      - BOOKLORE_USER_ID=1
+    volumes:
+      - /srv/antholume/config:/antholume:ro
+      - /srv/booklore/sync-bridge/state:/config
+    restart: unless-stopped
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true

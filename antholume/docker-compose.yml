@@ -1,0 +1,34 @@
+services:
+  antholume:
+    image: gitea.va.reichard.io/evan/antholume:latest
+    container_name: antholume
+    environment:
+      - REGISTRATION_ENABLED=false
+      - COOKIE_SECURE=true
+      - COOKIE_HTTP_ONLY=true
+      - LOG_LEVEL=info
+      - LISTEN_PORT=8585
+    volumes:
+      - /srv/antholume/config:/config
+      - /srv/antholume/data:/data
+      - /mnt/friday-pool/all/media/books:/books:ro
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.antholume.entrypoints=http"
+      - "traefik.http.routers.antholume.rule=Host(`antholume.arturgomes.com`)"
+      - "traefik.http.middlewares.antholume-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.antholume.middlewares=antholume-https-redirect"
+      - "traefik.http.routers.antholume-secure.entrypoints=https"
+      - "traefik.http.routers.antholume-secure.rule=Host(`antholume.arturgomes.com`)"
+      - "traefik.http.routers.antholume-secure.tls=true"
+      - "traefik.http.routers.antholume-secure.middlewares=default-headers@file"
+      - "traefik.http.routers.antholume-secure.service=antholume"
+      - "traefik.http.services.antholume.loadbalancer.server.port=8585"
+      - "traefik.docker.network=exposed"
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true
