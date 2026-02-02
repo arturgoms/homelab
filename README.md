@@ -41,6 +41,15 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 | **booklore** | Book library management | books.arturgomes.com |
 | **antholume** | E-book reading progress sync | - |
 
+### Music Automation (Internal)
+
+| Service | Description | Port |
+|---------|-------------|------|
+| **qbittorrent** | Torrent download client | 8080 |
+| **prowlarr** | Torrent indexer manager | 9696 |
+| **lidarr** | Music library manager | 8686 |
+| **slskd** | Soulseek P2P client | 5030 |
+
 ### Security & Monitoring
 
 | Service | Description |
@@ -62,6 +71,27 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 |---------|-------------|
 | **garmin-fetch-data** | Garmin fitness data fetcher |
 
+## Music Automation Stack
+
+Internal services for music library management (not exposed via Traefik).
+
+```
+Prowlarr (indexers) → Lidarr → qBittorrent → /downloads
+                         ↓           ↓
+                    /media/music ← imports
+                         ↓
+                     Navidrome
+
+slskd (Soulseek) → /media/music (for rare/niche music)
+```
+
+**Flow:**
+1. Add artists in **Lidarr** to monitor
+2. Lidarr searches **Prowlarr** indexers (Rutracker, etc.)
+3. Downloads via **qBittorrent**, imports to music library
+4. **Navidrome** serves the music
+5. **slskd** for P2P downloads of rare albums not on torrents
+
 ## Directory Structure
 
 ```
@@ -79,6 +109,10 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 ├── navidrome/            # Music streaming (Navidrome + Feishin + lrcget)
 ├── booklore/             # Book library management
 ├── antholume/            # E-book reading tracker
+├── qbittorrent/          # Torrent client
+├── prowlarr/             # Indexer manager
+├── lidarr/               # Music library manager
+├── slskd/                # Soulseek client
 └── ...                   # Other services
 ```
 
@@ -92,10 +126,11 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 
 ### Networks
 
-All services use the `exposed` Docker network for inter-container communication:
+Services use Docker networks for inter-container communication:
 
 ```bash
-docker network create exposed
+docker network create exposed      # External services (Traefik)
+docker network create music-stack  # Music automation services
 ```
 
 ### Starting Services

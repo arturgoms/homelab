@@ -111,3 +111,9 @@ garmin-fetch-data/garmin-grafana/
 booklore/sync-bridge/state/
 # Docker volumes (named volumes stored elsewhere)
 # Local data that shouldn't be in git
+
+# Music automation stack - config contains API keys and databases
+qbittorrent/config/
+prowlarr/config/
+lidarr/config/
+slskd/config/
