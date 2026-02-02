@@ -66,3 +66,14 @@ providers:
     updateIntervalSeconds: 60
     options:
       path: /var/lib/grafana/dashboards/booklore
+
+  - name: 'Navidrome'
+    orgId: 1
+    folder: 'Navidrome'
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 60
+    options:
+      path: /var/lib/grafana/dashboards/navidrome

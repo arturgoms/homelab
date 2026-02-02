@@ -1,0 +1,100 @@
+version: "3"
+services:
+  lrcget:
+    image: shadowsdiethrice/lrcget-kasm:1.0.0
+    container_name: lrcget
+    ports:
+      - "3033:3000"
+    restart: unless-stopped
+    environment:
+      PGID: 1000
+      PUID: 1000
+    volumes:
+      - /srv/navidrome/lrcget-config:/config
+      - /mnt/friday-pool/all/media/music:/music
+
+  feishin:
+    container_name: feishin
+    image: ghcr.io/jeffvli/feishin:latest
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: navidrome
+      SERVER_LOCK: "true"
+      SERVER_TYPE: navidrome
+      SERVER_URL: http://192.168.1.16:4533
+      LEGACY_AUTHENTICATION: "false"
+      ANALYTICS_DISABLED: "true"
+    ports:
+      - "9180:9180"
+    networks:
+      - exposed
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.feishin.entrypoints=http"
+      - "traefik.http.routers.feishin.rule=Host(`player.arturgomes.com`)"
+      - "traefik.http.middlewares.feishin-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.feishin.middlewares=feishin-https-redirect"
+      - "traefik.http.routers.feishin-secure.entrypoints=https"
+      - "traefik.http.routers.feishin-secure.rule=Host(`player.arturgomes.com`)"
+      - "traefik.http.routers.feishin-secure.tls=true"
+      - "traefik.http.routers.feishin-secure.service=feishin"
+      - "traefik.http.services.feishin.loadbalancer.server.port=9180"
+      - "traefik.docker.network=exposed"
+
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    user: 1000:1000
+    restart: unless-stopped
+    ports:
+      - "4533:4533"
+    environment:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: ""
+      ND_PROMETHEUS_ENABLED: "true"
+      ND_PROMETHEUS_METRICSPATH: "/metrics_681d215f9ea529c424bb4926"
+    volumes:
+      - /srv/navidrome/data:/data
+      - /mnt/friday-pool/all/media/music:/music:ro
+    networks:
+      - exposed
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.navidrome.entrypoints=http"
+      - "traefik.http.routers.navidrome.rule=Host(`music.arturgomes.com`)"
+      - "traefik.http.middlewares.navidrome-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.navidrome.middlewares=navidrome-https-redirect"
+      - "traefik.http.routers.navidrome-secure.entrypoints=https"
+      - "traefik.http.routers.navidrome-secure.rule=Host(`music.arturgomes.com`)"
+      - "traefik.http.routers.navidrome-secure.tls=true"
+      - "traefik.http.routers.navidrome-secure.service=navidrome"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+      - "traefik.docker.network=exposed"
+
+  magiclists:
+    build: ./magic-lists-for-navidrome
+    image: magiclists:local
+    container_name: magiclists
+    restart: unless-stopped
+    ports:
+      - "4545:8000"
+    environment:
+      NAVIDROME_URL: https://music.arturgomes.com
+      NAVIDROME_USERNAME: ${NAVIDROME_USERNAME}
+      NAVIDROME_PASSWORD: ${NAVIDROME_PASSWORD}
+      DATABASE_PATH: /app/data/magiclists.db
+      # Friday vLLM (OpenAI-compatible via ollama provider)
+      AI_PROVIDER: ollama
+      AI_MODEL: NousResearch/Hermes-4-14B
+      OLLAMA_BASE_URL: http://192.168.1.18:8000/v1/chat/completions
+      OLLAMA_TIMEOUT: 300
+    volumes:
+      - ./magiclists-data:/app/data
+    networks:
+      - exposed
+
+networks:
+  exposed:
+    external: true

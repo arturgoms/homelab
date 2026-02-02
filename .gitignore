@@ -18,6 +18,9 @@ traefik/users
 home-assistant/config/secrets.yaml
 home-assistant/config/.storage/*
 
+# Music 
+navidrome/lrcget-config/.cache/*
+
 # Data directories
 **/data/
 **/db-data/

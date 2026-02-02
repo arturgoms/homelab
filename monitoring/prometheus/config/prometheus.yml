@@ -33,3 +33,7 @@ scrape_configs:
     static_configs:
       - targets: ['192.168.1.16:9092']
 
+  - job_name: navidrome
+    metrics_path: /metrics_681d215f9ea529c424bb4926
+    static_configs:
+      - targets: ['192.168.1.16:4533']
