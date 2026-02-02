@@ -18,8 +18,32 @@ traefik/users
 home-assistant/config/secrets.yaml
 home-assistant/config/.storage/*
 
-# Music 
-navidrome/lrcget-config/.cache/*
+# Navidrome/LRCGET config - ignore runtime/cache data
+navidrome/lrcget-config/.cache/
+navidrome/lrcget-config/.config/
+navidrome/lrcget-config/.local/
+navidrome/lrcget-config/.dbus/
+navidrome/lrcget-config/.bashrc
+
+# General cache patterns (for any container config dirs)
+**/.cache/
+**/.config/pulse/
+**/.config/dconf/
+**/.dbus/
+**/mesa_shader_cache/
+**/fontconfig/*.cache-*
+
+# SQLite databases (runtime data)
+**/*.sqlite
+**/*.sqlite3
+**/*.sqlite3-shm
+**/*.sqlite3-wal
+
+# Binary files that shouldn't be committed
+**/.local/bin/
+
+# Salt/crypto files
+**/salt
 
 # Data directories
 **/data/
@@ -80,5 +104,10 @@ nextcloud/data/
 
 # Garmin Exports
 garmin-fetch-data/export/*
+# Garmin Grafana subproject (separate repo)
+garmin-fetch-data/garmin-grafana/
+
+# Booklore sync state (runtime data)
+booklore/sync-bridge/state/
 # Docker volumes (named volumes stored elsewhere)
 # Local data that shouldn't be in git

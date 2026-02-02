@@ -36,6 +36,10 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 | **stable-diffusion** | Image generation | sd.arturgomes.com |
 | **syncthing** | File synchronization | syncthing.arturgomes.com |
 | **glances** | System monitoring | glances.arturgomes.com |
+| **navidrome** | Music streaming server | music.arturgomes.com |
+| **feishin** | Music player web UI | player.arturgomes.com |
+| **booklore** | Book library management | books.arturgomes.com |
+| **antholume** | E-book reading progress sync | - |
 
 ### Security & Monitoring
 
@@ -72,6 +76,9 @@ Internet → Cloudflare Tunnel → Traefik → Docker Services
 ├── home-assistant/       # Home automation
 ├── monitoring/           # Prometheus & Grafana
 ├── crowdsec/             # Security
+├── navidrome/            # Music streaming (Navidrome + Feishin + lrcget)
+├── booklore/             # Book library management
+├── antholume/            # E-book reading tracker
 └── ...                   # Other services
 ```
 
