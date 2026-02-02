@@ -128,6 +128,41 @@ sections:
         target: newtab
         statusCheck: true
         id: 3_music_magiclists
+      - title: Daily Mix
+        description: Auto Daily Playlists
+        icon: fas fa-calendar-day
+        url: http://192.168.1.16:5050
+        target: newtab
+        statusCheck: true
+        id: 4_music_dailymix
+      - title: Lidarr
+        description: Music Library Manager
+        icon: fas fa-record-vinyl
+        url: http://192.168.1.16:8686
+        target: newtab
+        statusCheck: true
+        id: 5_music_lidarr
+      - title: qBittorrent
+        description: Torrent Client
+        icon: fas fa-download
+        url: http://192.168.1.16:8080
+        target: newtab
+        statusCheck: true
+        id: 6_music_qbittorrent
+      - title: Prowlarr
+        description: Indexer Manager
+        icon: fas fa-search-plus
+        url: http://192.168.1.16:9696
+        target: newtab
+        statusCheck: true
+        id: 7_music_prowlarr
+      - title: Slskd
+        description: Soulseek Client
+        icon: fas fa-share-alt
+        url: http://192.168.1.16:5030
+        target: newtab
+        statusCheck: true
+        id: 8_music_slskd
   - name: Books
     icon: fas fa-book
     displayData:
