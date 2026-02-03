@@ -1,10 +1,38 @@
 import httpx
-from typing import List, Dict, Any, Optional
+import re
+from typing import List, Dict, Any, Optional, Tuple
 import logging
 
 logger = logging.getLogger(__name__)
 
 LASTFM_API_URL = "https://ws.audioscrobbler.com/2.0/"
+
+# Patterns to split multi-artist strings
+FEATURING_PATTERNS = [
+    r'\s+feat\.?\s+',
+    r'\s+ft\.?\s+',
+    r'\s+featuring\s+',
+    r'\s+with\s+',
+    r'\s+&\s+',
+    r'\s+and\s+',
+    r'\s*,\s+',
+    r'\s+x\s+',
+]
+ARTIST_SPLIT_REGEX = re.compile('|'.join(FEATURING_PATTERNS), re.IGNORECASE)
+
+
+def extract_primary_artist(artist_string: str) -> Tuple[str, List[str]]:
+    """
+    Extract primary artist and list of all artists from a multi-artist string.
+    Returns (primary_artist, [all_artists])
+    """
+    parts = ARTIST_SPLIT_REGEX.split(artist_string)
+    parts = [p.strip() for p in parts if p.strip()]
+
+    if not parts:
+        return artist_string, [artist_string]
+
+    return parts[0], parts
 
 
 class LastFMClient:
@@ -36,17 +64,33 @@ class LastFMClient:
         return data
 
     async def get_similar_artists(self, artist: str, limit: int = 20) -> List[Dict[str, Any]]:
-        """Get similar artists for a given artist name."""
+        """Get similar artists for a given artist name.
+
+        Handles multi-artist strings by trying the primary artist if full lookup fails.
+        """
         cache_key = f"similar:{artist}"
         if cache_key in self._cache:
             return self._cache[cache_key]
 
+        # Try full artist string first
         data = await self._request("artist.getSimilar", {
             "artist": artist,
             "limit": limit,
         })
 
         similar = data.get("similarartists", {}).get("artist", [])
+
+        # If no results, try primary artist
+        if not similar:
+            primary, _ = extract_primary_artist(artist)
+            if primary != artist:
+                logger.debug(f"Retrying similar artists lookup with primary artist: {primary}")
+                data = await self._request("artist.getSimilar", {
+                    "artist": primary,
+                    "limit": limit,
+                })
+                similar = data.get("similarartists", {}).get("artist", [])
+
         if isinstance(similar, dict):
             similar = [similar]
 
@@ -62,7 +106,10 @@ class LastFMClient:
         return result
 
     async def get_artist_top_tracks(self, artist: str, limit: int = 50) -> List[Dict[str, Any]]:
-        """Get top tracks for an artist with listener counts."""
+        """Get top tracks for an artist with listener counts.
+
+        Handles multi-artist strings by trying the primary artist if full lookup fails.
+        """
         cache_key = f"toptracks:{artist}"
         if cache_key in self._cache:
             return self._cache[cache_key]
@@ -73,6 +120,18 @@ class LastFMClient:
         })
 
         tracks = data.get("toptracks", {}).get("track", [])
+
+        # If no results, try primary artist
+        if not tracks:
+            primary, _ = extract_primary_artist(artist)
+            if primary != artist:
+                logger.debug(f"Retrying top tracks lookup with primary artist: {primary}")
+                data = await self._request("artist.getTopTracks", {
+                    "artist": primary,
+                    "limit": limit,
+                })
+                tracks = data.get("toptracks", {}).get("track", [])
+
         if isinstance(tracks, dict):
             tracks = [tracks]
 
@@ -112,7 +171,10 @@ class LastFMClient:
         return result
 
     async def get_artist_info(self, artist: str) -> Dict[str, Any]:
-        """Get info about an artist including listener count."""
+        """Get info about an artist including listener count.
+
+        Handles multi-artist strings by trying the primary artist if full lookup fails.
+        """
         cache_key = f"artist:{artist}"
         if cache_key in self._cache:
             return self._cache[cache_key]
@@ -122,6 +184,17 @@ class LastFMClient:
         })
 
         artist_data = data.get("artist", {})
+
+        # If no results, try primary artist
+        if not artist_data:
+            primary, _ = extract_primary_artist(artist)
+            if primary != artist:
+                logger.debug(f"Retrying artist info lookup with primary artist: {primary}")
+                data = await self._request("artist.getInfo", {
+                    "artist": primary,
+                })
+                artist_data = data.get("artist", {})
+
         stats = artist_data.get("stats", {})
 
         result = {

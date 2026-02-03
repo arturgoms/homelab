@@ -12,6 +12,12 @@ from .navidrome import NavidromeClient
 from .lastfm import LastFMClient
 from .playlist_gen import PlaylistGenerator
 
+# Import LLM client conditionally
+try:
+    from .llm import LLMClient
+except ImportError:
+    LLMClient = None
+
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, config.LOG_LEVEL.upper()),
@@ -22,6 +28,7 @@ logger = logging.getLogger(__name__)
 # Global clients
 navidrome_client: NavidromeClient = None
 lastfm_client: LastFMClient = None
+llm_client: "LLMClient" = None
 scheduler: AsyncIOScheduler = None
 
 
@@ -31,7 +38,7 @@ async def run_playlist_generation():
     start_time = datetime.now()
 
     try:
-        generator = PlaylistGenerator(navidrome_client, lastfm_client)
+        generator = PlaylistGenerator(navidrome_client, lastfm_client, llm_client)
         results = await generator.generate_and_save_playlists()
 
         duration = (datetime.now() - start_time).total_seconds()
@@ -49,7 +56,7 @@ async def run_playlist_generation():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    global navidrome_client, lastfm_client, scheduler
+    global navidrome_client, lastfm_client, llm_client, scheduler
 
     # Validate configuration
     if not config.validate():
@@ -66,6 +73,19 @@ async def lifespan(app: FastAPI):
 
     logger.info(f"Initialized Navidrome client for {config.NAVIDROME_URL}")
     logger.info(f"Initialized Last.fm client")
+
+    # Initialize LLM client if enabled
+    if config.LLM_ENABLED and LLMClient:
+        llm_client = LLMClient(config.LLM_BASE_URL, config.LLM_MODEL)
+        if await llm_client.health_check():
+            logger.info(f"Initialized LLM client for {config.LLM_BASE_URL}")
+            logger.info(f"Mood playlists enabled: {config.MOOD_PLAYLISTS}")
+        else:
+            logger.warning(f"LLM server not accessible at {config.LLM_BASE_URL}, mood playlists disabled")
+            await llm_client.close()
+            llm_client = None
+    else:
+        logger.info("LLM integration disabled")
 
     # Setup scheduler
     scheduler = AsyncIOScheduler()
@@ -92,6 +112,8 @@ async def lifespan(app: FastAPI):
     scheduler.shutdown()
     await navidrome_client.close()
     await lastfm_client.close()
+    if llm_client:
+        await llm_client.close()
     logger.info("Shutdown complete")
 
 
@@ -150,6 +172,8 @@ async def get_status():
         "playlist_size": config.PLAYLIST_SIZE,
         "for_you_name": config.PLAYLIST_FOR_YOU_NAME,
         "discover_name": config.PLAYLIST_DISCOVER_NAME,
+        "llm_enabled": llm_client is not None,
+        "mood_playlists": config.MOOD_PLAYLISTS if llm_client else [],
     }
 
 

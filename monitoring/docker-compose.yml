@@ -33,6 +33,7 @@ services:
     volumes:
       - /srv/monitoring/grafana:/var/lib/grafana
       - /srv/monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - /srv/monitoring/grafana/navidrome-readonly.db:/var/lib/grafana/navidrome.db:ro
     restart: unless-stopped
     ports:
       - "8087:3000"

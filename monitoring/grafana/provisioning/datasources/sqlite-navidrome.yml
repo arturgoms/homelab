@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Navidrome-SQLite
+    type: frser-sqlite-datasource
+    uid: navidrome-sqlite
+    access: proxy
+    jsonData:
+      path: /var/lib/grafana/navidrome.db
+    editable: true

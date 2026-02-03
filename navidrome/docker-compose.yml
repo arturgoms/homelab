@@ -15,7 +15,7 @@ services:
 
   feishin:
     container_name: feishin
-    image: ghcr.io/jeffvli/feishin:latest
+    image: ghcr.io/jeffvli/feishin:1.4.2
     restart: unless-stopped
     environment:
       SERVER_NAME: navidrome
@@ -55,6 +55,11 @@ services:
       ND_BASEURL: ""
       ND_PROMETHEUS_ENABLED: "true"
       ND_PROMETHEUS_METRICSPATH: "/metrics_681d215f9ea529c424bb4926"
+      # External integrations
+      ND_LASTFM_APIKEY: ${ND_LASTFM_APIKEY}
+      ND_LASTFM_SECRET: ${ND_LASTFM_SECRET}
+      ND_SPOTIFY_ID: ${ND_SPOTIFY_ID}
+      ND_SPOTIFY_SECRET: ${ND_SPOTIFY_SECRET}
     volumes:
       - /srv/navidrome/data:/data
       - /mnt/friday-pool/all/media/music:/music:ro
