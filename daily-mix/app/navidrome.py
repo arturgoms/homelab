@@ -107,12 +107,8 @@ class NavidromeClient:
         response = await self._request("getPlaylists")
         return response.get("playlists", {}).get("playlist", [])
 
-    async def create_playlist(self, name: str, song_ids: List[str]) -> str:
+    async def create_playlist(self, name: str, song_ids: List[str], comment: Optional[str] = None) -> str:
         """Create a new playlist with the given songs."""
-        params = {"name": name}
-        for song_id in song_ids:
-            params.setdefault("songId", []).append(song_id)
-
         # Subsonic API expects multiple songId parameters
         url = f"{self.base_url}/rest/createPlaylist"
         request_params = self._get_auth_params()
@@ -132,10 +128,15 @@ class NavidromeClient:
             raise Exception(f"Failed to create playlist: {error.get('message', 'Unknown error')}")
 
         playlist = subsonic_response.get("playlist", {})
+        playlist_id = playlist.get("id", "")
         logger.info(f"Created playlist '{name}' with {len(song_ids)} songs")
-        return playlist.get("id", "")
 
-    async def update_playlist(self, playlist_id: str, song_ids: List[str]) -> None:
+        if comment and playlist_id:
+            await self.set_playlist_comment(playlist_id, comment)
+
+        return playlist_id
+
+    async def update_playlist(self, playlist_id: str, song_ids: List[str], comment: Optional[str] = None) -> None:
         """Update an existing playlist with new songs (replaces all songs)."""
         # First, get current songs to remove them
         response = await self._request("getPlaylist", {"id": playlist_id})
@@ -165,18 +166,31 @@ class NavidromeClient:
                 params=[(k, v) for k, v in request_params.items()] + [("songIdToAdd", sid) for sid in song_ids]
             )
 
+        if comment is not None:
+            await self.set_playlist_comment(playlist_id, comment)
+
         logger.info(f"Updated playlist {playlist_id} with {len(song_ids)} songs")
 
-    async def get_or_create_playlist(self, name: str, song_ids: List[str]) -> str:
+    async def set_playlist_comment(self, playlist_id: str, comment: str) -> None:
+        """Set the comment/description on a playlist."""
+        url = f"{self.base_url}/rest/updatePlaylist"
+        request_params = self._get_auth_params()
+        request_params["playlistId"] = playlist_id
+        request_params["comment"] = comment
+
+        await self.client.get(url, params=request_params)
+        logger.debug(f"Set comment on playlist {playlist_id}")
+
+    async def get_or_create_playlist(self, name: str, song_ids: List[str], comment: Optional[str] = None) -> str:
         """Get existing playlist by name or create new one, then update with songs."""
         playlists = await self.get_playlists()
 
         for playlist in playlists:
             if playlist.get("name") == name:
-                await self.update_playlist(playlist["id"], song_ids)
+                await self.update_playlist(playlist["id"], song_ids, comment=comment)
                 return playlist["id"]
 
-        return await self.create_playlist(name, song_ids)
+        return await self.create_playlist(name, song_ids, comment=comment)
 
     async def close(self):
         """Close the HTTP client."""

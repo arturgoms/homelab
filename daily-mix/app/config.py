@@ -14,7 +14,7 @@ class Config:
 
     # LLM (vLLM with OpenAI-compatible API)
     LLM_ENABLED: bool = os.getenv("LLM_ENABLED", "false").lower() == "true"
-    LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "http://192.168.1.18:8080")
+    LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "http://192.168.1.18:8000")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "default")
 
     # Playlist Configuration
@@ -36,8 +36,22 @@ class Config:
     MIN_PLAY_COUNT_FOR_TOP_ARTIST: int = int(os.getenv("MIN_PLAY_COUNT_FOR_TOP_ARTIST", "5"))
     MAX_PLAY_COUNT_FOR_DISCOVER: int = int(os.getenv("MAX_PLAY_COUNT_FOR_DISCOVER", "3"))
     MAX_SONGS_PER_ALBUM: int = int(os.getenv("MAX_SONGS_PER_ALBUM", "3"))
+    MAX_SONGS_PER_ARTIST: int = int(os.getenv("MAX_SONGS_PER_ARTIST", "4"))
+    MAX_SONGS_PER_ARTIST_DISCOVER: int = int(os.getenv("MAX_SONGS_PER_ARTIST_DISCOVER", "2"))
     SIMILAR_ARTIST_DEPTH: int = int(os.getenv("SIMILAR_ARTIST_DEPTH", "3"))
     LASTFM_MIN_LISTENERS: int = int(os.getenv("LASTFM_MIN_LISTENERS", "1000"))
+
+    # Cooldown
+    COOLDOWN_DAYS: int = int(os.getenv("COOLDOWN_DAYS", "7"))
+    HISTORY_FILE: str = os.getenv("HISTORY_FILE", "/app/data/playlist_history.json")
+
+    # Scoring
+    RECENCY_DECAY_DAYS: int = int(os.getenv("RECENCY_DECAY_DAYS", "90"))
+
+    # LLM features
+    LLM_PLAYLIST_DESCRIPTIONS: bool = os.getenv("LLM_PLAYLIST_DESCRIPTIONS", "true").lower() == "true"
+    LLM_AUTO_MOODS: bool = os.getenv("LLM_AUTO_MOODS", "true").lower() == "true"
+    MOOD_CONFIG_FILE: str = os.getenv("MOOD_CONFIG_FILE", "/app/data/mood_config.json")
 
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
