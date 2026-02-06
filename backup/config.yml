@@ -1,0 +1,64 @@
+# Backup configuration for /srv homelab data
+
+# Paths
+source_dir: /srv
+backup_dest: /mnt/friday-pool/all/media/backups/srv1
+retention_days: 7
+
+# Rsync exclusions (already in git or regenerable)
+rsync_excludes:
+  - node_modules
+  - .git
+  - "*.log"
+  - __pycache__
+  - .cache
+  - model-cache
+  - venv
+  - .venv
+  - .ipc-socket*
+  - .XDG
+
+# Database containers to dump before backup
+# dump_cmd runs inside the container via: docker exec <container> sh -c "<dump_cmd>"
+# format: sql (stdout redirect) or dir (backup to directory inside container, then docker cp out)
+databases:
+  - name: mariadb
+    container: mariadb
+    format: sql
+    dump_dir: /srv/mariadb/dumps
+    dump_cmd: 'mariadb-dump --all-databases -u root -p"$MYSQL_ROOT_PASSWORD"'
+    restore_cmd: 'mariadb -u root -p"$MYSQL_ROOT_PASSWORD"'
+  - name: postgres
+    container: database
+    format: sql
+    dump_dir: /srv/databases/dumps
+    dump_cmd: 'pg_dumpall -U "$POSTGRES_USER"'
+    restore_cmd: 'psql -U "$POSTGRES_USER"'
+  - name: immich-postgres
+    container: immich_postgres
+    format: sql
+    dump_dir: /srv/immich/dumps
+    dump_cmd: 'pg_dumpall -U "$POSTGRES_USER"'
+    restore_cmd: 'psql -U "$POSTGRES_USER"'
+  - name: influxdb2
+    container: influxdb
+    format: dir
+    dump_dir: /srv/monitoring/dumps/influxdb2
+    dump_cmd: 'rm -rf /tmp/backup && influx backup /tmp/backup'
+    restore_cmd: 'influx restore /tmp/backup'
+  - name: influxdb1x
+    container: influxdb1x
+    format: dir
+    dump_dir: /srv/monitoring/dumps/influxdb1x
+    dump_cmd: 'rm -rf /tmp/backup && influxd backup -portable /tmp/backup'
+    restore_cmd: 'influxd restore -portable /tmp/backup'
+
+# Docker named volumes to export (rotated daily)
+docker_volumes:
+  - crowdsec_crowdsec-db
+  - crowdsec_crowdsec-config
+  - garmin-fetch-data_influxdb_data
+  - n8n_n8n_storage
+  - n8n_redis_storage
+  - navidrome_audiomuse-redis-data
+  - openwebui_open-webui

@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   lrcget:
     image: shadowsdiethrice/lrcget-kasm:1.0.0
@@ -43,7 +44,7 @@ services:
 
   navidrome:
     container_name: navidrome
-    image: deluan/navidrome:latest
+    image: deluan/navidrome:0.60.0
     user: 1000:1000
     restart: unless-stopped
     ports:
@@ -55,6 +56,10 @@ services:
       ND_BASEURL: ""
       ND_PROMETHEUS_ENABLED: "true"
       ND_PROMETHEUS_METRICSPATH: "/metrics_681d215f9ea529c424bb4926"
+      # Plugins
+      ND_PLUGINS_ENABLED: "true"
+      ND_PLUGINS_AUTORELOAD: "true"
+      ND_AGENTS: lastfm,spotify,deezer
       # External integrations
       ND_LASTFM_APIKEY: ${ND_LASTFM_APIKEY}
       ND_LASTFM_SECRET: ${ND_LASTFM_SECRET}
@@ -77,28 +82,6 @@ services:
       - "traefik.http.routers.navidrome-secure.service=navidrome"
       - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
       - "traefik.docker.network=exposed"
-
-  magiclists:
-    build: ./magic-lists-for-navidrome
-    image: magiclists:local
-    container_name: magiclists
-    restart: unless-stopped
-    ports:
-      - "4545:8000"
-    environment:
-      NAVIDROME_URL: https://music.arturgomes.com
-      NAVIDROME_USERNAME: ${NAVIDROME_USERNAME}
-      NAVIDROME_PASSWORD: ${NAVIDROME_PASSWORD}
-      DATABASE_PATH: /app/data/magiclists.db
-      # Friday vLLM (OpenAI-compatible via ollama provider)
-      AI_PROVIDER: ollama
-      AI_MODEL: NousResearch/Hermes-4-14B
-      OLLAMA_BASE_URL: http://192.168.1.18:8000/v1/chat/completions
-      OLLAMA_TIMEOUT: 300
-    volumes:
-      - ./magiclists-data:/app/data
-    networks:
-      - exposed
 
 networks:
   exposed:

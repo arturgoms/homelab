@@ -1,0 +1,12 @@
+[Unit]
+Description=Backup /srv data to NAS
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=/mnt/friday-pool
+
+[Service]
+Type=oneshot
+ExecStart=/srv/backup/backup.sh
+User=root
+Nice=19
+IOSchedulingClass=idle

@@ -121,13 +121,15 @@ long_query_time         = 5
 #auto_increment_increment = 2
 #auto_increment_offset  = 1
 log_bin                 = /config/log/mysql/mariadb-bin
+#skip-log-bin
+#tc-heuristic-recover=ROLLBACK
 log_bin_index           = /config/log/mysql/mariadb-bin.index
 # not fab for performance, but safer
 #sync_binlog             = 1
 #binlog_do_db            = include_database_name
 #binlog_ignore_db        = include_database_name
-expire_logs_days        = 10
-max_binlog_size         = 100M
+expire_logs_days        = 2
+#max_binlog_size         = 100M
 # slaves
 #relay_log              = /config/log/mysql/relay-bin
 #relay_log_index        = /config/log/mysql/relay-bin.index
