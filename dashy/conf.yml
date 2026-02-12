@@ -121,13 +121,6 @@ sections:
         target: newtab
         statusCheck: true
         id: 2_music_lrcget
-      - title: Magic Lists
-        description: AI Playlist Generator
-        icon: fas fa-magic
-        url: http://192.168.1.16:4545
-        target: newtab
-        statusCheck: true
-        id: 3_music_magiclists
       - title: Daily Mix
         description: Auto Daily Playlists
         icon: fas fa-calendar-day

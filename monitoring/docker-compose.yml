@@ -37,6 +37,8 @@ services:
     restart: unless-stopped
     ports:
       - "8087:3000"
+    env_file:
+      - .env
     environment:
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
       - GF_SECURITY_ANGULAR_SUPPORT_ENABLED=true
@@ -70,6 +72,8 @@ services:
     user: telegraf:996 #you need to find the GID of Docker if not added to Sudo group
     networks:
       - grafana-monitoring
+    env_file:
+      - .env
     volumes:
         - '/srv/monitoring/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
         - '/:/hostfs:ro' # to monitor docker-vm

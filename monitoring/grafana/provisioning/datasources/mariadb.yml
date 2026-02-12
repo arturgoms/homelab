@@ -9,5 +9,5 @@ datasources:
     database: booklore
     user: booklore
     secureJsonData:
-      password: ibwAVgHQwJLGNXoU
+      password: $__env{GF_DATASOURCE_MARIADB_PASSWORD}
     editable: true

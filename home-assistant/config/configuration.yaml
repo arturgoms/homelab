@@ -22,8 +22,8 @@ influxdb:
   host: "192.168.1.16"
   port: 8088
   database: GarminStats
-  username: friday
-  password: eQQenqw6JDcYiEr4sLT3WYtvLCs
+  username: !secret influxdb_username
+  password: !secret influxdb_password
   ssl: false
   verify_ssl: false
   max_retries: 3

@@ -107,6 +107,8 @@ nextcloud/data/
 
 # Garmin Exports
 garmin-fetch-data/export/*
+# Garmin OAuth tokens (auto-generated, contain secrets)
+garmin-fetch-data/garmin_tokens_data/
 # Garmin Grafana subproject (separate repo)
 garmin-fetch-data/garmin-grafana/
 
