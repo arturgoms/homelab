@@ -1,6 +1,6 @@
 services:
   booklore:
-    image: ghcr.io/booklore-app/booklore:latest
+    image: ghcr.io/booklore-app/booklore:v2.0.1
     container_name: booklore
     env_file:
       - .env
@@ -65,6 +65,7 @@ services:
     volumes:
       - /srv/antholume/config:/antholume:ro
       - /srv/booklore/sync-bridge/state:/config
+      - /mnt/friday-pool/all/media/books:/books:ro
     restart: unless-stopped
     networks:
       - exposed

@@ -1,6 +1,9 @@
 ---
 title: About
 description: "Backend Developer with 10+ years of Python experience"
+status: published
+tags:
+  - area/blog
 ---
 
 # About Me
@@ -35,8 +38,8 @@ Currently, I work full-time with **Django** and **Django REST Framework**, desig
 
 When I'm not writing code for work, I enjoy:
 
-- **Building [[projects/friday|Friday]]** - My personal AI assistant running entirely on local hardware, with 79 tools, Telegram integration, and proactive awareness features
-- **Self-hosting** - Running my own services on a [[projects/homelab|homelab]]
+- **Building [[friday|Friday]]** - My personal AI assistant running entirely on local hardware, with 79 tools, Telegram integration, and proactive awareness features
+- **Self-hosting** - Running my own services on a [[homelab|homelab]]
 - **Automation** - Making repetitive tasks disappear
 - **Learning** - Exploring new technologies and approaches
 

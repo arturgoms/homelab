@@ -1,13 +1,10 @@
 ---
-title: Blog
+title: "2026"
+date: 2026-01-01
 status: published
 tags:
   - area/blog
 ---
-
-A collection of posts about backend development, self-hosting, and productivity.
-
-## [2026](posts/2026/)
 
 - [[the-obsidian-manual|The Obsidian Manual: How I Organize My Notes]] — Jan 19
 - [[how-to-manage-passwords|How to Manage Passwords]] — Jan 19

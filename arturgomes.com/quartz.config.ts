@@ -1,5 +1,6 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
+import * as Component from "./quartz/components"
 
 /**
  * Quartz 4 Configuration
@@ -23,10 +24,10 @@ const config: QuartzConfig = {
     defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
-      cdnCaching: true,
+      cdnCaching: false,
       typography: {
-        header: "IBM Plex Mono",
-        body: "IBM Plex Mono",
+        header: "Schibsted Grotesk",
+        body: "Source Sans Pro",
         code: "IBM Plex Mono",
       },
       colors: {
@@ -43,7 +44,7 @@ const config: QuartzConfig = {
         },
         darkMode: {
           light: "#101010",
-          lightgray: "#1a1a1a",
+          lightgray: "#707070",
           gray: "#908d8d",
           darkgray: "#c9cacc",
           dark: "#eeeeee",
@@ -80,7 +81,7 @@ const config: QuartzConfig = {
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
-      Plugin.FolderPage(),
+      Plugin.FolderPage({ pageBody: Component.Content() }),
       Plugin.TagPage(),
       Plugin.ContentIndex({
         enableSiteMap: true,

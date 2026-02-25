@@ -1,5 +1,8 @@
 ---
 title: Home
+status: published
+tags:
+  - area/blog
 ---
 
 # Hey, I'm Artur
@@ -14,7 +17,7 @@ By night, I tinker with my homelab - self-hosting services, experimenting with D
 
 ## Recent Posts
 
-Check out my latest writings in the [[posts/|blog]] section, where I share tutorials, experiences, and thoughts on:
+Check out my latest writings in the [[posts/index|blog]] section, where I share tutorials, experiences, and thoughts on:
 
 - **Backend Development** - Python, Django, FastAPI, API design
 - **Self-Hosting** - Docker, homelab setups, monitoring
@@ -22,7 +25,7 @@ Check out my latest writings in the [[posts/|blog]] section, where I share tutor
 
 ## Projects
 
-I'm currently working on [[projects/friday|Friday]], a personal AI assistant running entirely on local hardware, and maintaining my [[projects/homelab|homelab]] infrastructure.
+I'm currently working on [[friday|Friday]], a personal AI assistant running entirely on local hardware, and maintaining my [[homelab|homelab]] infrastructure.
 
 ## Get in Touch
 

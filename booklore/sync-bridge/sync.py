@@ -9,6 +9,7 @@ Matches books by title/author/filename and syncs reading sessions.
 import os
 import re
 import time
+import hashlib
 import sqlite3
 import pymysql
 from datetime import datetime, timedelta
@@ -23,12 +24,15 @@ BOOKLORE_USER = os.getenv('BOOKLORE_DB_USER', 'booklore')
 BOOKLORE_PASSWORD = os.getenv('BOOKLORE_DB_PASSWORD', '')
 SYNC_INTERVAL = int(os.getenv('SYNC_INTERVAL', 300))  # 5 minutes default
 BOOKLORE_USER_ID = int(os.getenv('BOOKLORE_USER_ID', 1))  # BookLore user ID
+BOOKS_PATH = os.getenv('BOOKS_PATH', '/books')
 
 # Track synced activities to avoid duplicates
 SYNC_STATE_FILE = '/config/sync_state.txt'
 
 # Cache for book matching
 book_cache = {}
+# Cache: real file MD5 -> book_id
+file_md5_cache = {}
 
 
 def get_antholume_connection():
@@ -88,6 +92,42 @@ def similarity(a, b):
     return SequenceMatcher(None, normalize_text(a), normalize_text(b)).ratio()
 
 
+def compute_file_md5(filepath):
+    """Compute MD5 hash of a file"""
+    md5 = hashlib.md5()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(8192), b''):
+            md5.update(chunk)
+    return md5.hexdigest()
+
+
+def build_file_md5_cache(cursor):
+    """Build a cache mapping real file MD5 -> book_id for all BookLore books"""
+    global file_md5_cache
+    file_md5_cache = {}
+
+    cursor.execute("""
+        SELECT bf.book_id, bf.file_name, bf.file_sub_path
+        FROM book_file bf
+        JOIN book b ON bf.book_id = b.id
+        WHERE b.deleted = 0 AND bf.is_book = 1
+    """)
+
+    for row in cursor.fetchall():
+        file_name = row['file_name']
+        sub_path = row['file_sub_path'] or ''
+        full_path = os.path.join(BOOKS_PATH, sub_path, file_name)
+
+        if os.path.exists(full_path):
+            try:
+                md5 = compute_file_md5(full_path)
+                file_md5_cache[md5] = row['book_id']
+            except Exception as e:
+                print(f"[{datetime.now()}] Error computing MD5 for {file_name}: {e}")
+
+    print(f"[{datetime.now()}] Built file MD5 cache: {len(file_md5_cache)} files")
+
+
 def load_booklore_books(cursor):
     """Load all BookLore books into cache"""
     global book_cache
@@ -114,6 +154,8 @@ def load_booklore_books(cursor):
         }
     print(f"[{datetime.now()}] Loaded {len(book_cache)} books from BookLore")
 
+    build_file_md5_cache(cursor)
+
 
 def find_booklore_book(antholume_doc):
     """Find matching BookLore book for an AnthoLume document"""
@@ -133,7 +175,14 @@ def find_booklore_book(antholume_doc):
                 print(f"[{datetime.now()}] MD5 match: '{title or doc_id}' -> '{book.get('title', 'Unknown')}' (hash: {md5[:8]}...)")
                 return book_id
 
-    # Second try: hash prefix match (KOReader partial MD5 vs BookLore full hash)
+    # Second try: real file MD5 match
+    if md5 and md5 in file_md5_cache:
+        matched_id = file_md5_cache[md5]
+        matched_title = book_cache.get(matched_id, {}).get('title', 'Unknown')
+        print(f"[{datetime.now()}] File MD5 match: '{title or doc_id}' -> '{matched_title}' (md5: {md5[:8]}...)")
+        return matched_id
+
+    # Third try: hash prefix match (KOReader partial MD5 vs BookLore full hash)
     # doc_id in AnthoLume is the partial MD5 from KOReader
     if doc_id:
         doc_id_lower = doc_id.lower()

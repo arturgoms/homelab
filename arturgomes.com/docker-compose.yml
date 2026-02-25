@@ -28,6 +28,24 @@ services:
       # Service
       - "traefik.http.services.arturgomes.loadbalancer.server.port=80"
 
+  blog-watcher:
+    build: ./watcher
+    container_name: blog-watcher
+    restart: unless-stopped
+    volumes:
+      # Obsidian vault (read-only) — synced here by Syncthing
+      - /srv/syncthing/docs/notes:/vault:ro
+      # Blog source — watcher writes published files to content/ and triggers rebuild
+      - /srv/arturgomes.com:/blog
+      # Docker socket — allows watcher to trigger docker compose up --build
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "VAULT_BLOG=/vault/5. Blog"
+      - CONTENT_DIR=/blog/content
+      - BLOG_DIR=/blog
+      # Must match the compose project name on this host (directory name of /srv/arturgomes.com)
+      - COMPOSE_PROJECT_NAME=arturgomescom
+
 networks:
   exposed:
     external: true

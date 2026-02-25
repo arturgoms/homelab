@@ -17,3 +17,20 @@
     z-index: 101;
   }
 }
+
+
+// Prevent long titles from wrapping in the sidebar explorer and backlinks
+.explorer-ul li > a,
+.explorer-ul .folder-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.backlinks ul.overflow li a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

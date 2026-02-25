@@ -1,12 +1,13 @@
 ---
-title: "The Obsidian Manual: How I Organize My Notes"
-description: "My complete operating manual for organizing thoughts, projects, and knowledge with Obsidian"
+title: How I Organize My Notes
+description: My complete operating manual for organizing thoughts, projects, and knowledge with Obsidian
 date: 2026-01-19
+status: published
 tags:
-  - productivity
-  - obsidian
-  - note-taking
-  - knowledge-management
+  - area/blog
+  - topic/productivity
+  - topic/note-taking
+  - topic/knowledge-management
 ---
 
 After trying every note-taking methodology out there, I developed my own system in Obsidian. This is my complete operating manual for organizing thoughts, projects, and knowledge with clarity and consistency.
@@ -61,6 +62,10 @@ Each folder has a distinct purpose. Numerical prefixes maintain logical order.
 4. Archive/
    ├── 4.1 Projects       # Completed projects
    └── 4.2 Time           # Past time-based notes
+
+5. Blog/                   # Source of truth for arturgomes.com
+   ├── posts/             # Blog posts
+   └── projects/          # Project showcase pages
 ```
 
 ### Folder Purposes
@@ -74,6 +79,8 @@ Each folder has a distinct purpose. Numerical prefixes maintain logical order.
 **3. Resources** - Supplementary materials that support your knowledge work. Templates and attachments live here, keeping main folders clean.
 
 **4. Archive** - Cold storage for completed or inactive items. Keeps your active workspace focused on what's relevant now.
+
+**5. Blog** - The source of truth for [arturgomes.com](https://arturgomes.com). Posts are written here with `status: draft`, and published by switching to `status: published`. Syncthing syncs the file to the [[homelab|homelab]] and the blog deploys automatically. The blog codebase never needs to be touched to publish a post. See [[obsidian-blog-sync|how the full pipeline works]].
 
 ## The Tagging System
 
@@ -182,3 +189,9 @@ Good candidates:
 5. **Archive = Nothing is deleted, just stored**
 
 The goal isn't a perfect system. It's a system that gets out of your way and helps you think.
+
+---
+
+## Updates
+
+- **2026-02-24** — Added `5. Blog` folder to the folder structure. The vault is now the source of truth for [arturgomes.com](https://arturgomes.com), with posts deploying automatically via Syncthing + a file watcher on the homelab.
