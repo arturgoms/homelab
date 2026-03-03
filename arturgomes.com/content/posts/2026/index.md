@@ -10,3 +10,4 @@ tags:
 - [[how-to-manage-passwords|How to Manage Passwords]] — Jan 19
 - [[obsidian-blog-sync|Publishing Posts from Obsidian]] — Feb 24
 - [[qmk-keyboard-setup|My Keyboard Does More Than Type]] — Feb 24
+- [[ollama-auto-sleep-wol|Auto-Sleeping My GPU Server]] — Mar 3

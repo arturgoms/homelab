@@ -1,0 +1,6 @@
+[Unit]
+Description=Ollama auto-sleep idle check
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ollama-autosleep.sh

@@ -1,0 +1,7 @@
+services:
+  ollama-proxy:
+    build: .
+    container_name: ollama-proxy
+    network_mode: host
+    restart: unless-stopped
+    env_file: .env

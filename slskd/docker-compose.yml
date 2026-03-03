@@ -13,6 +13,7 @@ services:
     volumes:
       - ./config:/app
       - /mnt/friday-pool/all/downloads/incomplete:/incomplete
+      - /mnt/friday-pool/all/downloads/slskd:/downloads
       - /mnt/friday-pool/all/media/music:/music
     ports:
       - 5030:5030

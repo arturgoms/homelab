@@ -4,3 +4,6 @@
 [submodule "friday"]
 	path = friday
 	url = git@github.com:arturgoms/friday.git
+[submodule "nanobot/nanobot-src"]
+	path = nanobot/nanobot-src
+	url = https://github.com/HKUDS/nanobot.git

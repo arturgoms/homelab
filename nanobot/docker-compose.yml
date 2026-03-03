@@ -1,0 +1,19 @@
+services:
+  nanobot:
+    build:
+      context: ./nanobot-src
+      dockerfile: Dockerfile
+    image: nanobot:latest
+    container_name: nanobot
+    command: ["gateway"]
+    network_mode: host
+    env_file:
+      - ./config/.env
+    volumes:
+      - ./config:/root/.nanobot
+      - /srv/syncthing/docs/notes:/vault:ro
+      - "/srv/syncthing/docs/notes/5. Blog:/blog:rw"
+      - "/srv/syncthing/docs/notes/2. Time:/time:rw"
+      - /srv/friday/data/google_credentials.json:/root/.nanobot/google_credentials.json:ro
+      - /srv/friday/data/google_token.pickle:/root/.nanobot/google_token.pickle:ro
+    restart: unless-stopped
